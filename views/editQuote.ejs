@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+<h2>Update Quote</h2>
+
+<form method="POST" action="/quote/edit">
+
+  <input type="hidden" name="quoteId" value="<%= quoteInfo[0].quoteId %>">
+
+  <label>Quote:</label>
+  <textarea name="quote" rows="3" cols="60" required><%= quoteInfo[0].quote %></textarea>
+  <br>
+
+  <label>Author ID:</label>
+  <input type="number" name="authorId" value="<%= quoteInfo[0].authorId %>" min="1" required>
+  <br>
+
+  <label>Category:</label>
+  <input type="text" name="category" value="<%= quoteInfo[0].category %>" required>
+  <br>
+
+  <label>Likes:</label>
+  <input type="number" name="likes" value="<%= quoteInfo[0].likes %>" min="0" required>
+  <br>
+
+  <button class="btn">Update Quote</button>
+
+</form>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,38 @@
+<%- include('partials/header') %>
+
+<h2>Add New Quote</h2>
+
+<form method="POST" action="/quote/new">
+
+  <label class="full-label">Quote:</label>
+  <div class="indent">
+    <textarea name="quote" rows="4" required></textarea>
+  </div>
+  <br>
+
+  <label>Author ID:</label>
+  <input type="number" name="authorId" min="1" required>
+  <br>
+
+  <label>Category:</label>
+  <select name="category" required>
+    <option value="">-- Select Category --</option>
+    <% categories.forEach(cat => { %>
+      <option value="<%= cat.category %>"><%= cat.category %></option>
+    <% }) %>
+  </select>
+  <br>
+
+  <label>Likes:</label>
+  <input type="number" name="likes" value="0" min="0" required>
+  <br>
+
+  <button class="btn">Add Quote</button>
+
+</form>
+
+<% if (typeof message !== "undefined") { %>
+  <div class="message"><%= message %></div>
+<% } %>
+
+<%- include('partials/footer') %>

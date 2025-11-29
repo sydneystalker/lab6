@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+<h2>Update / Delete Quotes</h2>
+
+<div class="table-like">
+
+  <% quotes.forEach(q => { %>
+    <div class="table-like-row">
+
+      <div class="quote-actions">
+        <a class="btn" href="/quote/edit?quoteId=<%= q.quoteId %>">Update</a>
+
+        <a class="btn btn-danger"
+           href="/quote/delete?quoteId=<%= q.quoteId %>"
+           onclick="return confirm('Are you sure you want to delete this quote?');">
+          Delete
+        </a>
+      </div>
+
+      <span class="quote-text">
+        “<%= q.quote %>”
+      </span>
+
+      <strong>— <%= q.authorName %></strong>
+
+      <div class="quote-meta">
+        Category: <%= q.category %> |
+        Likes: <%= q.likes %>
+      </div>
+
+    </div>
+  <% }) %>
+
+</div>
+
+<%- include('partials/footer') %>

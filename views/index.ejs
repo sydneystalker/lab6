@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+
+<h2>Admin Dashboard</h2>
+<p>Use the options below to manage authors and quotes.</p>
+
+<div class="admin-actions">
+
+  <form class="dashboard-btn" action="/author/new">
+    <button class="btn">Add Authors</button>
+  </form>
+
+  <form class="dashboard-btn" action="/quote/new">
+    <button class="btn">Add Quotes</button>
+  </form>
+
+  <form class="dashboard-btn" action="/authors">
+    <button class="btn">List Authors</button>
+  </form>
+
+  <form class="dashboard-btn" action="/quotes">
+    <button class="btn">List Quotes</button>
+  </form>
+
+</div>
+
+<%- include('partials/footer') %>

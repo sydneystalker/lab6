@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+<h2>Update / Delete Authors</h2>
+
+<div class="table-like">
+
+  <% authors.forEach(author => { %>
+    <div class="table-like-row">
+      
+      <a class="btn" href="/author/edit?authorId=<%= author.authorId %>">
+        Update
+      </a>
+
+      <a class="btn btn-danger" 
+         href="/author/delete?authorId=<%= author.authorId %>"
+         onclick="return confirm('Are you sure you want to delete this author?');">
+        Delete
+      </a>
+
+      <span>
+        <strong><%= author.firstName %> <%= author.lastName %></strong>
+      </span>
+
+    </div>
+  <% }) %>
+
+</div>
+
+<%- include('partials/footer') %>

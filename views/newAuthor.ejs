@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+
+<h2>Add New Author</h2>
+
+<form method="POST" action="/author/new">
+
+  <label>First Name:</label>
+  <input type="text" name="fName" required>
+  <br>
+
+  <label>Last Name:</label>
+  <input type="text" name="lName" required>
+  <br>
+
+  <label>Date of Birth:</label>
+  <input type="date" name="birthDate" required>
+  <br>
+
+  <label>Date of Death:</label>
+  <input type="date" name="deathDate">
+  <br>
+
+  <label>Sex:</label>
+  <input type="radio" name="sex" value="M" required> M
+  <input type="radio" name="sex" value="F"> F
+  <br><br>
+
+  <label>Profession:</label>
+  <input type="text" name="profession" required>
+  <br>
+
+  <label>Country:</label>
+  <input type="text" name="country" required>
+  <br>
+
+  <label>Portrait URL:</label>
+  <input type="text" name="portrait" required>
+  <br>
+
+  <label class="full-label">Biography:</label>
+  <div class="indent">
+    <textarea name="biography" rows="4" cols="50" required></textarea>
+  </div>
+  <br>
+
+  <button class="btn">Add Author</button>
+
+</form>
+
+<% if (typeof message !== "undefined") { %>
+  <div class="message"><%= message %></div>
+<% } %>
+
+<%- include('partials/footer') %>
