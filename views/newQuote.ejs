@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header') %> 
 
 <h2>Add New Quote</h2>
 
@@ -10,8 +10,13 @@
   </div>
   <br>
 
-  <label>Author ID:</label>
-  <input type="number" name="authorId" min="1" required>
+  <label>Author:</label>
+  <select name="authorId" required>
+    <option value="">-- Select Author --</option>
+    <% authors.forEach(a => { %>
+      <option value="<%= a.authorId %>"><%= a.authorName %></option>
+    <% }) %>
+  </select>
   <br>
 
   <label>Category:</label>
@@ -31,7 +36,7 @@
 
 </form>
 
-<% if (typeof message !== "undefined") { %>
+<% if (message) { %>
   <div class="message"><%= message %></div>
 <% } %>
 

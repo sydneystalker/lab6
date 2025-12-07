@@ -198,14 +198,39 @@ app.get("/quotes", async function (req, res) {
 app.get("/quote/edit", async function (req, res) {
   const quoteId = req.query.quoteId;
 
-  const sql = `
-    SELECT *
-    FROM q_quotes
-    WHERE quoteId = ?
-  `;
-  const [rows] = await pool.query(sql, [quoteId]);
-  res.render("editQuote", { quoteInfo: rows });
+  try {
+    // Get the quote we are editing
+    const [quoteRows] = await pool.query(
+      `
+      SELECT *
+      FROM q_quotes
+      WHERE quoteId = ?
+      `,
+      [quoteId]
+    );
+
+    if (quoteRows.length === 0) {
+      return res.status(404).send("Quote not found");
+    }
+
+    // Get all authors so we can show their names in a dropdown
+    const [authorRows] = await pool.query(`
+      SELECT authorId,
+             CONCAT(firstName, ' ', lastName) AS authorName
+      FROM q_authors
+      ORDER BY lastName, firstName
+    `);
+
+    res.render("editQuote", {
+      quote: quoteRows[0],
+      authors: authorRows,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("DB error loading quote/author data");
+  }
 });
+
 
 // Handle quote update
 app.post("/quote/edit", async function (req, res) {
@@ -253,47 +278,73 @@ app.get("/quote/delete", async function (req, res) {
   }
 });
 
-// Display form to add a new quote (with category dropdown)
+// Display form to add a new quote (with category and author dropdowns)
 app.get("/quote/new", async (req, res) => {
-  const sql = `
-    SELECT DISTINCT category
-    FROM q_quotes
-    ORDER BY category
-  `;
-  const [categories] = await pool.query(sql);
+  try {
+    // Get distinct categories
+    const [categories] = await pool.query(`
+      SELECT DISTINCT category
+      FROM q_quotes
+      ORDER BY category
+    `);
 
-  res.render("newQuote", { categories });
+    // Get all authors for dropdown
+    const [authors] = await pool.query(`
+      SELECT authorId,
+             CONCAT(firstName, ' ', lastName) AS authorName
+      FROM q_authors
+      ORDER BY lastName, firstName
+    `);
+
+    res.render("newQuote", { categories, authors, message: null });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("DB error loading authors/categories");
+  }
 });
+
 
 // Add new Quote
 app.post("/quote/new", async function (req, res) {
-  const quote = req.body.quote;
-  const authorId = req.body.authorId;
-  const category = req.body.category;
-  const likes = req.body.likes;
-
   const sql = `
-    INSERT INTO q_quotes
-      (quote, authorId, category, likes)
+    INSERT INTO q_quotes (quote, authorId, category, likes)
     VALUES (?, ?, ?, ?)
   `;
 
-  const params = [quote, authorId, category, likes];
+  const params = [
+    req.body.quote,
+    req.body.authorId,
+    req.body.category,
+    req.body.likes
+  ];
 
   try {
     await pool.query(sql, params);
 
-    // Reload categories for the form after successful insert
-    const [categories] = await pool.query(
-      "SELECT DISTINCT category FROM q_quotes ORDER BY category"
-    );
+    const [categories] = await pool.query(`
+      SELECT DISTINCT category
+      FROM q_quotes
+      ORDER BY category
+    `);
 
-    res.render("newQuote", { categories, message: "Quote added!" });
+    const [authors] = await pool.query(`
+      SELECT authorId,
+             CONCAT(firstName, ' ', lastName) AS authorName
+      FROM q_authors
+      ORDER BY lastName, firstName
+    `);
+
+    res.render("newQuote", {
+      categories,
+      authors,
+      message: "Quote added!"
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("DB error inserting quote");
   }
 });
+
 
 // ------------------------- DB TEST ----------------------------------
 
